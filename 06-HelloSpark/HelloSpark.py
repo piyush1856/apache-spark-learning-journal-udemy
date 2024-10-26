@@ -26,7 +26,11 @@ if __name__ == "__main__" :
 
     #Loading the dataframe
     survey_raw_df = load_survey_df(spark, sys.argv[1])
-    survey_raw_df.show()
+    partitioned_survey_df = survey_raw_df.repartition(2)
+    count_df = count_by_country(partitioned_survey_df)
+
+    logger.info(count_df.collect())             # collect returns the DF as python list
+    # survey_raw_df.show()                      # show is more of a utility function
 
 
     logger.info("Finished HelloSpark")
