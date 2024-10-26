@@ -1,7 +1,7 @@
 from pyspark.sql import *
-
+import sys
 from lib.logger import Log4j
-from lib.utils import get_spark_app_config
+from lib.utils import *
 
 if __name__ == "__main__" :
 
@@ -14,10 +14,19 @@ if __name__ == "__main__" :
 
     logger = Log4j(spark)
 
+    # Checking Command Line argument
+    if len(sys.argv) != 2:
+        logger.error("Usage: HelloSpark <filename>")
+        sys.exit(-1)
+
     logger.info("Starting HelloSpark")
 
     # Reading the config file
     logger.info(spark.sparkContext.getConf().toDebugString())
+
+    #Loading the dataframe
+    survey_raw_df = load_survey_df(spark, sys.argv[1])
+    survey_raw_df.show()
 
 
     logger.info("Finished HelloSpark")
